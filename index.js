@@ -8,10 +8,11 @@ const { PORT } = process.env;
 app.use(cors());
 app.use(express.json());
 
-const warehouseRoute =  require ("./routes/warehouse.js")
-app.use("/warehouse", warehouseRoute)
-
+const warehouseRoute = require("./routes/warehouse.js");
+app.use("/warehouse", warehouseRoute);
 
 app.listen(8080, function () {
-    console.log("here is the server on port " + PORT);
-  });
+  console.log("here is the server on port " + PORT);
+});
+
+// hello
