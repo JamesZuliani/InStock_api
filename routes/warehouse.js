@@ -7,6 +7,8 @@ router.get("/", warehouseController.fetchAll);
 // Back-End: API to POST/CREATE a New Warehouse
 router.post("/", warehouseController.postWarehouse);
 
+//Back-End:API to DELETE a warehouse
+router.delete("/:warehouseID",warehouseController.deleteWarehouse);
 //PUT / Edit warehouse
 router.put("/:warehouseId", warehouseController.putWarehouse);
 

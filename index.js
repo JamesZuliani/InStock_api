@@ -12,7 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 const warehouseRoute = require("./routes/warehouse.js");
-app.use("/api/warehouses", warehouseRoute);
+app.use("/api/warehouses", warehouseRoute)
+
 
 app.listen(8080, function () {
   console.log("here is the server on port " + PORT);
