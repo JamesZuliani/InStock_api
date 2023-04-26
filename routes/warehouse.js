@@ -9,6 +9,7 @@ router.post("/", warehouseController.postWarehouse);
 
 //Back-End:API to DELETE a warehouse
 router.delete("/:warehouseID",warehouseController.deleteWarehouse);
+
 //PUT / Edit warehouse
 router.put("/:warehouseId", warehouseController.putWarehouse);
 
