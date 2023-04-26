@@ -6,7 +6,6 @@ const knex = require("knex");
 const db = knex(knexConfig);
 //////////////////////////////////
 
-
 // POST
 module.exports.postWarehouse = async (req, res) => {
   // Check if we have sufficient body data
@@ -71,6 +70,7 @@ module.exports.postWarehouse = async (req, res) => {
       // Show the added row as the requested format
       const insertedRow = await db("warehouses")
         .select(
+          "id",
           "warehouse_name",
           "address",
           "city",
@@ -84,8 +84,8 @@ module.exports.postWarehouse = async (req, res) => {
         .first();
       res.json(insertedRow);
     } catch (err) {
-        // prefrred to not show the error message.
-      res.status(400).json({error: "Failed to create the warehouse entry."});
+      // prefrred to not show the error message.
+      res.status(400).json({ error: "Failed to create the warehouse entry." });
     }
   }
 };
