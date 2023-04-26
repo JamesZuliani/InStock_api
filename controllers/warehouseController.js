@@ -177,7 +177,6 @@ module.exports.putWarehouse = async (req, res) => {
   try {
     const targetRow = await db("warehouses").where("id", targetId).first();
     if (targetRow) {
-      console.log(targetRow);
       await db("warehouses").where("id", targetId).update({
         warehouse_name,
         address,
