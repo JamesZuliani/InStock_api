@@ -1,4 +1,7 @@
 require("dotenv").config();
+const knexConfig = require("./knexfile");
+const knex = require("knex")(knexConfig);
+
 
 const express = require("express");
 const cors = require("cors");
@@ -10,6 +13,11 @@ app.use(express.json());
 
 const warehouseRoute = require("./routes/warehouse.js");
 app.use("/warehouse", warehouseRoute);
+
+const warehousesRoute = require("./routes/warehouses.js");
+app.use("/api/warehouses", warehousesRoute);
+
+
 
 app.listen(8080, function () {
   console.log("here is the server on port " + PORT);
