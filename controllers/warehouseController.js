@@ -60,6 +60,12 @@ module.exports.postWarehouse = async (req, res) => {
           error: `${key}: < '${req.body[key]}' > has incorrect format`,
         });
       }
+      // if id is present its throw error
+      else if (key === "id") {
+        return res.status(400).json({
+          error: "cannot set ID manually",
+        });
+      }
     }
 
     // now destructure the request
@@ -88,6 +94,7 @@ module.exports.postWarehouse = async (req, res) => {
         contact_position,
         contact_phone,
         contact_email,
+        "created_at": db.fn.now() 
       });
       // Show the added row as the requested format
       const insertedRow = await db("warehouses")
@@ -152,7 +159,7 @@ module.exports.putWarehouse = async (req, res) => {
       }
     }
   }
-  
+
   // now destructure the request
   const {
     warehouse_name,
