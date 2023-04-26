@@ -94,7 +94,7 @@ module.exports.postWarehouse = async (req, res) => {
         contact_position,
         contact_phone,
         contact_email,
-        "created_at": db.fn.now() 
+        created_at: db.fn.now(),
       });
       // Show the added row as the requested format
       const insertedRow = await db("warehouses")
@@ -174,40 +174,39 @@ module.exports.putWarehouse = async (req, res) => {
   const targetId = req.params.warehouseId;
 
   // check for ID field in db
-  const targetRow = await db("warehouses").where("id", targetId).first();
-  if (targetRow) {
-    console.log(targetRow);
-    await db("warehouses").where("id", targetId).update({
-      warehouse_name,
-      address,
-      city,
-      country,
-      contact_name,
-      contact_position,
-      contact_phone,
-      contact_email,
-      updated_at: db.fn.now(),
-    });
-    const alteredRow = await db("warehouses")
-      .select(
-        "id",
-        "warehouse_name",
-        "address",
-        "city",
-        "country",
-        "contact_name",
-        "contact_position",
-        "contact_phone",
-        "contact_email"
-      )
-      .where("id", targetId)
-      .first();
-    res.json(alteredRow);
-  } else {
-    return res.status(400).json({ error: "ID not found" });
-  }
-
   try {
+    const targetRow = await db("warehouses").where("id", targetId).first();
+    if (targetRow) {
+      console.log(targetRow);
+      await db("warehouses").where("id", targetId).update({
+        warehouse_name,
+        address,
+        city,
+        country,
+        contact_name,
+        contact_position,
+        contact_phone,
+        contact_email,
+        updated_at: db.fn.now(),
+      });
+      const alteredRow = await db("warehouses")
+        .select(
+          "id",
+          "warehouse_name",
+          "address",
+          "city",
+          "country",
+          "contact_name",
+          "contact_position",
+          "contact_phone",
+          "contact_email"
+        )
+        .where("id", targetId)
+        .first();
+      res.json(alteredRow);
+    } else {
+      return res.status(400).json({ error: "ID not found" });
+    }
   } catch (err) {
     res.status(400).json({ error: "Failed to put the warehouse entry." });
   }
