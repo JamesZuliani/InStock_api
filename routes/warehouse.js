@@ -7,4 +7,8 @@ router.get("/", warehouseController.fetchAll);
 // Back-End: API to POST/CREATE a New Warehouse
 router.post("/", warehouseController.postWarehouse);
 
+//PUT / Edit warehouse
+router.put("/:warehouseId", warehouseController.putWarehouse);
+
+
 module.exports = router;
