@@ -111,3 +111,23 @@ module.exports.postWarehouse = async (req, res) => {
     }
   }
 };
+
+//DELETE a warehouse
+
+module.exports.deleteWarehouse = async (req, res) => {
+  const id = req.params.warehouseID;
+
+  try {
+    const warehouses = await db("warehouses").where({ id }).del();
+
+    if (warehouses > 0) {
+      res.sendStatus(204);
+    } else {
+      res
+        .status(404)
+        .send(`Error: warehouse with id ${req.params.warehouseID} not found`);
+    }
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
