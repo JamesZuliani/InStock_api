@@ -6,6 +6,28 @@ const knex = require("knex");
 const db = knex(knexConfig);
 //////////////////////////////////
 
+//GET all warehouses
+module.exports.fetchAll = (_req, res) => {
+  db.select(
+    "id",
+    "warehouse_name",
+    "address",
+    "city",
+    "country",
+    "contact_name",
+    "contact_position",
+    "contact_phone",
+    "contact_email"
+  )
+    .from("warehouses")
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) =>
+      res.status(400).send(`Error retrieving Warehouses: ${err}`)
+    );
+};
+
 // POST
 module.exports.postWarehouse = async (req, res) => {
   // Check if we have sufficient body data

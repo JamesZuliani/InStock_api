@@ -1,4 +1,7 @@
 require("dotenv").config();
+const knexConfig = require("./knexfile");
+const knex = require("knex")(knexConfig);
+
 
 const express = require("express");
 const cors = require("cors");
@@ -15,4 +18,4 @@ app.listen(8080, function () {
   console.log("here is the server on port " + PORT);
 });
 
-// hello
+
