@@ -28,6 +28,34 @@ module.exports.fetchAll = (_req, res) => {
     );
 };
 
+//Get the single warehouse
+module.exports.fetchId = (req, res) => {
+
+  db("warehouses").select(
+    "id",
+    "warehouse_name",
+    "address",
+    "city",
+    "country",
+    "contact_name",
+    "contact_position",
+    "contact_phone",
+    "contact_email"
+  )
+    .where({ 'id': req.params.warehouseId })
+    .then((warehouse) => {
+      if (warehouse.length === 0) {
+        return res.status(404).json({message:`Error ${req.params.warehouseId} not found`})
+      }
+      return res.status(200).json(warehouse[0]);
+    })
+    .catch(() => {
+      return res.status(500).json({
+        message: `Error getting warehouse detail ${req.params.warehouseId}`
+      })
+    })
+}
+
 // POST
 module.exports.postWarehouse = async (req, res) => {
   // Check if we have sufficient body data
