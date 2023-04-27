@@ -92,7 +92,7 @@ module.exports.postInventory = async (req, res) => {
         });
       } else if (key === "quantity" && !Number.isInteger(+req.body[key])) {
         return res.status(400).json({
-          error: `${key}: < '${req.body[key]}' > is not a valid number, please input a number (integer)`
+          error: `${key}: < '${req.body[key]}' > is not a valid number, please input a number (integer)`,
         });
       }
     }
@@ -139,7 +139,7 @@ module.exports.postInventory = async (req, res) => {
       res.json(insertedRow);
     } catch (err) {
       // prefrred to not show the error message.
-      res.status(500).json({error: `cannot post`});
+      res.status(500).json({ error: `cannot post` });
     }
   }
 };
@@ -166,5 +166,101 @@ module.exports.deleteInventoryItem = async (req, res) => {
     }
   } catch (e) {
     res.status(500).json(e);
+  }
+};
+
+// edit an inventory item
+module.exports.putInventory = async (req, res) => {
+  const categories = [
+    "Accessories",
+    "Gear",
+    "Electronics",
+    "Health",
+    "Apparel",
+  ];
+  const stock = ["In Stock", "Out of Stock"];
+  // Check if we have sufficient body data
+  if (Object.keys(req.body).length !== 6) {
+    return res.status(400).json({ error: "insufficient parameters" });
+    // if we have complete body data:
+  } else {
+    // loop through the object and check if its not empty
+    for (key in req.body) {
+      if (req.body[key] === "") {
+        return res.status(400).json({ error: `${key} is empty` });
+      }
+      // check for valid category
+      else if (key === "category" && !categories.includes(req.body[key])) {
+        return res.status(400).json({
+          error: `${key}: < '${req.body[key]}' > is not a valid category, please select one of: Accessories, Gear, Electronics, Health, or Apparel `,
+        });
+      }
+      // check for valid status
+      else if (key === "status" && !stock.includes(req.body[key])) {
+        return res.status(400).json({
+          error: `${key}: < '${req.body[key]}' > is not a valid status, please select 'In Stock', or 'Out of Stock'`,
+        });
+      }
+      // if id is present its throw error
+      else if (key === "id") {
+        return res.status(400).json({
+          error: "cannot set ID manually",
+        });
+      }
+      // if quantity is not a number, status 400
+      else if (key === "quantity" && !Number.isInteger(+req.body[key])) {
+        return res.status(400).json({
+          error: `${key}: < '${req.body[key]}' > is not a valid number, please input a number (integer)`,
+        });
+      }
+    }
+
+    // now destructure the request
+    const { warehouse_id, item_name, description, category, status, quantity } =
+      req.body;
+    const targetId = req.params.inventoryId;
+
+    // query for warehouse id
+    const warehouseId = await db("warehouses")
+      .select("id")
+      .where("id", warehouse_id);
+    if (warehouseId.length === 0) {
+      return res.status(400).json({
+        error: "This warehouse ID does not exist",
+      });
+    }
+
+    // check for ID field in db
+    try {
+      const targetRow = await db("inventories").where("id", targetId).first();
+      if (targetRow) {
+        await db("inventories").where("id", targetId).update({
+          warehouse_id,
+          item_name,
+          description,
+          category,
+          status,
+          quantity,
+          updated_at: db.fn.now(),
+        });
+        const alteredRow = await db("inventories")
+          .select(
+            "id",
+            "warehouse_id",
+            "item_name",
+            "description",
+            "category",
+            "status",
+            "quantity"
+          )
+          .where("id", targetId)
+          .first();
+        res.json(alteredRow);
+      } else {
+        return res.status(400).json({ error: "ID not found" });
+      }
+    } catch (err) {
+      res.status(400).json({ error: "Failed to put the inventory entry." });
+    }
   }
 };
