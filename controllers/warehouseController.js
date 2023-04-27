@@ -56,6 +56,30 @@ module.exports.fetchId = (req, res) => {
     })
 }
 
+//GET all inventories from a single warehouse 
+
+module.exports.getAll = (req, res) =>{
+db("inventories").select(
+  "id",
+  "item_name",
+  "category",
+  "status",
+  "quantity"
+)
+  .where({'warehouse_id':req.params.warehouseId})
+  .then((data) => {
+    if (data.length===0) {
+      return res.status(404).json({message:`Error getting inventories from warehouse with ID ${req.params.warehouseId}`})
+    }
+    return res.status(200).json(data);
+  })
+  .catch(() => {
+    return res.status(500).json({
+      message: `Cannot fetch selected inventory.`
+    });
+  })
+}
+
 // POST
 module.exports.postWarehouse = async (req, res) => {
   // Check if we have sufficient body data

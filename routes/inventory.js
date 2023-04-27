@@ -8,5 +8,7 @@ router.get("/", inventoryController.fetchAll);
 router.get("/:inventoryId", inventoryController.fetchSingle);
 
 
+
+
 module.exports = router;
 
