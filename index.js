@@ -2,7 +2,6 @@ require("dotenv").config();
 const knexConfig = require("./knexfile");
 const knex = require("knex")(knexConfig);
 
-
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -20,5 +19,3 @@ app.use("/api/inventories", inventoryRoute);
 app.listen(8080, function () {
   console.log("here is the server on port " + PORT);
 });
-
-
