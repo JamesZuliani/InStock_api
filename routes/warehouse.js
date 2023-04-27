@@ -8,6 +8,11 @@ router.get("/", warehouseController.fetchAll);
 
 router.get("/:warehouseId", warehouseController.fetchId);
 
+
+//Back-End: API to GET inventories for a single warehouse
+router.get("/:warehouseId/inventories", warehouseController.getAll)
+
+
 // Back-End: API to POST/CREATE a New Warehouse
 router.post("/", warehouseController.postWarehouse);
 
