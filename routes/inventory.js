@@ -10,6 +10,7 @@ router.get("/:inventoryId", inventoryController.fetchSingle);
 // Back end: API to POST a new inventory item
 router.post ("/", inventoryController.postInventory);
 
+//Back-End:API to DELETE a inventory item
+router.delete("/:inventoryID", inventoryController.deleteInventoryItem);
 
 module.exports = router;
-
