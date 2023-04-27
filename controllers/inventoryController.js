@@ -56,3 +56,23 @@ module.exports.fetchAll = (_req, res) => {
 // SELECT inventories.id,warehouses.warehouse_name,inventories.item_name, inventories.description, inventories.category,inventories.status,inventories.quantity
 // FROM instock.warehouses as warehouses
 // JOIN instock.inventories as inventories on inventories.warehouse_id = warehouses.id;
+
+//Delete an inventory item
+
+module.exports.deleteInventoryItem = async (req, res) => {
+  const id = req.params.inventoryID;
+
+  try {
+    const inventory = await db("inventories").where({ id }).del();
+
+    if (inventory > 0) {
+      res.sendStatus(204);
+    } else {
+      res
+        .status(404)
+        .send(`Error: inventory with id ${req.params.inventoryID} not found`);
+    }
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
