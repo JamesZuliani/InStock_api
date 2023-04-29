@@ -33,7 +33,7 @@ module.exports.fetchSingle = async (req, res) => {
 };
 
 //GET all inventories from all warehouses
-module.exports.fetchAll = (_req, res) => {
+module.exports.fetchAll = (req, res) => {
   db("warehouses")
     .join("inventories", "inventories.warehouse_id", "=", "warehouses.id")
     .select(
@@ -46,7 +46,35 @@ module.exports.fetchAll = (_req, res) => {
       "inventories.quantity"
     )
     .then((data) => {
-      res.status(200).json(data);
+      if (req.query.sort_by) {
+        const { sort_by, order_by } = req.query;
+        console.log(sort_by);
+        try {
+          if (sort_by === "quantity" || sort_by === "asc") {
+            sorted = data.sort((a, b) => a[sort_by] - b[sort_by]);
+            if (order_by === "desc") {
+              sorted = data.sort((a, b) => b[sort_by] - a[sort_by]);
+            }
+            res.status(200).json(sorted);
+          } else {
+            if (sort_by || order_by === "asc") {
+              sorted = data.sort((a, b) =>
+                a[sort_by].localeCompare(b[sort_by])
+              );
+            }
+            if (order_by === "desc") {
+              sorted = data.sort((a, b) =>
+                b[sort_by].localeCompare(a[sort_by])
+              );
+            }
+            res.status(200).json(sorted);
+          }
+        } catch (err) {
+          res.status(400).json(err);
+        }
+      } else {
+        res.status(200).json(data);
+      }
     })
     .catch((err) =>
       res.status(400).send(`Error retrieving Inventories: ${err}`)
