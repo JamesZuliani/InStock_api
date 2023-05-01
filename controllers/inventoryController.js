@@ -33,7 +33,7 @@ module.exports.fetchSingle = async (req, res) => {
 };
 
 //GET all inventories from all warehouses
-module.exports.fetchAll = (_req, res) => {
+module.exports.fetchAll = (req, res) => {
   db("warehouses")
     .join("inventories", "inventories.warehouse_id", "=", "warehouses.id")
     .select(
